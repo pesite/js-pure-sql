@@ -1,0 +1,20 @@
+{
+  "name": "pure-sql",
+  "version": "0.0.9",
+  "description": "Interface to sql server through pure sql templates. Write sql, run sql.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./node_modules/jest/bin/jest"
+  },
+  "keywords": [
+    "sql",
+    "pure",
+    "template"
+  ],
+  "author": "Patrick Teich",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^21.2.1",
+    "jison": "^0.4.18"
+  }
+}
