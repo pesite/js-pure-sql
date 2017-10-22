@@ -1,5 +1,7 @@
 'use strict';
 
+const pureSql = require('./lib/pure-sql.js');
+
 module.exports = {
-  thing: function(a) {}
+    parseTemplates: pureSql.parseTemplates
 };

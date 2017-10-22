@@ -605,18 +605,16 @@ case 2: this.popState(); return 12;
 break;
 case 3:  this.popState(); return 14; 
 break;
-case 4: return 'SEMICOLON'; 
+case 4: return 9; 
 break;
-case 5: return 9; 
+case 5: return 15; 
 break;
-case 6: return 15; 
-break;
-case 7: return 8; 
+case 6: return 8; 
 break;
 }
 },
-rules: [/^(?:--[-\s]*name\s*:\s*)/,/^(?:--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:;\n*)/,/^(?:.*((;\n*)|(\n\n+)))/,/^(?:[^;\n]*\n+)/,/^(?:$)/],
-conditions: {"comment":{"rules":[2],"inclusive":false},"nameprefix":{"rules":[3],"inclusive":false},"INITIAL":{"rules":[0,1,4,5,6,7],"inclusive":true}}
+rules: [/^(?:--[-\s]*name\s*:\s*)/,/^(?:--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:.*((;\n*)|(\n\n+)))/,/^(?:[^;\n]*\n+)/,/^(?:$)/],
+conditions: {"comment":{"rules":[2],"inclusive":false},"nameprefix":{"rules":[3],"inclusive":false},"INITIAL":{"rules":[0,1,4,5,6],"inclusive":true}}
 });
 return lexer;
 })();

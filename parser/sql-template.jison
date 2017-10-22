@@ -19,7 +19,6 @@
 "--"[-\s]*     { this.begin('comment'); return 'COMMENTPREFIX'; }
 <comment>.*\n*        { this.popState(); return 'REST'; }
 <nameprefix>[^\s]+\n+         {  this.popState(); return 'NAME'; }
-";"\n*              { return 'SEMICOLON'; }
 .*((";"\n*)|(\n\n+))  { return 'ENDLINE'; }
 [^;\n]*\n+          { return 'LINE'; }
 <<EOF>>        { return 'EOF'; }
