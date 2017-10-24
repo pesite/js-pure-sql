@@ -71,15 +71,15 @@
     recoverable: (boolean: TRUE when the parser has a error recovery rule available for this particular error)
   }
 */
-var sqlTemplate = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[1,7],$V2=[1,8],$V3=[1,9],$V4=[1,10],$V5=[1,11],$V6=[1,12],$V7=[1,8,10,12,13,14,15,16],$V8=[8,10,12,13,14,15,16];
+var sqlTemplateBasic = (function(){
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[8,9],$V1=[2,8],$V2=[1,6],$V3=[1,7],$V4=[1,8],$V5=[8,9,11,13,15],$V6=[1,8,9,11,13,15];
 var parser = {trace: function trace() {
         Jison.print.apply(null, arguments);
     },
 yy: {},
-symbols_: {"error":2,"root":3,"queries":4,"querylines":5,"queryline":6,"queryend":7,"COMMENTPREFIX":8,"REST":9,"NAMEPREFIX":10,"NAME":11,"WORD":12,"PARAM":13,"EOF":14,"ENDWORD":15,"ENDPARAM":16,"$accept":0,"$end":1},
-terminals_: {2:"error",8:"COMMENTPREFIX",9:"REST",10:"NAMEPREFIX",11:"NAME",12:"WORD",13:"PARAM",14:"EOF",15:"ENDWORD",16:"ENDPARAM"},
-productions_: [0,[3,1],[4,2],[4,1],[5,2],[5,1],[6,2],[6,2],[6,1],[6,1],[7,1],[7,1],[7,1]],
+symbols_: {"error":2,"root":3,"queries":4,"query":5,"querylines":6,"queryend":7,"EOF":8,"ENDLINE":9,"queryline":10,"COMMENTPREFIX":11,"REST":12,"NAMEPREFIX":13,"NAME":14,"LINE":15,"$accept":0,"$end":1},
+terminals_: {2:"error",8:"EOF",9:"ENDLINE",11:"COMMENTPREFIX",12:"REST",13:"NAMEPREFIX",14:"NAME",15:"LINE"},
+productions_: [0,[3,1],[4,2],[4,1],[5,2],[7,1],[7,1],[6,2],[6,0],[10,2],[10,2],[10,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -89,63 +89,39 @@ case 1:
  return $$[$0]; 
 break;
 case 2:
-
-        let r = {};
-        if ($$[$0] !== undefined) {
-            r = $$[$0];
-        }
-        let querylineParams = Object.assign($$[$0-1].params || {}, $$[$0].params || {});
-        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams};
-        this.$ = r; 
+ let r = {}; if ($$[$0] !== undefined) {r = $$[$0]; } r[$$[$0-1].name.trim()] = $$[$0-1].line.trim(); this.$ = r; 
 break;
 case 3:
-
-        let rr = {};
-        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params};
-        this.$ = rr; 
+ let rr = {}; rr[$$[$0].name.trim()] = $$[$0].line.trim(); this.$ = rr; 
 break;
 case 4:
-
-        let params = $$[$0].params;
-        if ($$[$0-1].param && typeof(params[$$[$0-1].param]) === 'undefined') {
-            params[$$[$0-1].param] = Object.keys(params).length+1;
-        }
-        if ($$[$0].param && typeof(params[$$[$0].param]) === 'undefined') {
-            params[$$[$0].param] = Object.keys(params).length+1;
-        }
-        $$[$0] = $$[$0] || {line: '', name: ''};
-        this.$ = {line: $$[$0-1].line + $$[$0].line,
-              name: $$[$0-1].name + $$[$0].name,
-              params: params}; 
+ this.$ = {name: $$[$0-1].name + $$[$0].name, line: $$[$0-1].line + $$[$0].line}; 
 break;
 case 5:
- this.$ = $$[$0]; 
-break;
-case 6:
- this.$ = {comment: $$[$0], line: ' ', name: ''}; 
-break;
-case 7:
- this.$ = {name: $$[$0], line: ''}; 
-break;
-case 8:
- this.$ = {line: $$[$0] || '', name: ''}; 
-break;
-case 9:
- this.$ = {line: $$[$0] || '', name: '', param: $$[$0].trim().substring(1, $$[$0].trim().length-1)}; 
-break;
-case 10:
  this.$ = { name: '', line: ''}; 
 break;
-case 11:
+case 6:
  this.$ = {name: '', line: $$[$0]}; 
 break;
-case 12:
- let trimmed = $$[$0].replace(';', ' ').trim(); this.$ = {line: $$[$0] || '', name: '', param: trimmed.substring(1, trimmed.length-1), params: {}}; 
+case 7:
+ $$[$0] = $$[$0] || {line: '', name: ''}; this.$ = {line: $$[$0-1].line + $$[$0].line, name: $$[$0-1].name + $$[$0].name}; 
+break;
+case 8:
+ this.$ = { line: '', name: ''}; 
+break;
+case 9:
+ this.$ = {comment: $$[$0], line: '', name: ''}; 
+break;
+case 10:
+ this.$ = {name: $$[$0], line: ''}; 
+break;
+case 11:
+ this.$ = {line: $$[$0] || '', name: ''}; 
 break;
 }
 },
-table: [{3:1,4:2,5:3,6:4,7:5,8:$V0,10:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{1:[3]},{1:[2,1]},{1:[2,3],4:13,5:3,6:4,7:5,8:$V0,10:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{5:14,6:4,7:5,8:$V0,10:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},o($V7,[2,5]),{9:[1,15]},{11:[1,16]},o($V8,[2,8]),o($V8,[2,9]),o($V7,[2,10]),o($V7,[2,11]),o($V7,[2,12]),{1:[2,2]},o($V7,[2,4]),o($V8,[2,6]),o($V8,[2,7])],
-defaultActions: {2:[2,1],13:[2,2]},
+table: [o($V0,$V1,{3:1,4:2,5:3,6:4,10:5,11:$V2,13:$V3,15:$V4}),{1:[3]},{1:[2,1]},o($V0,$V1,{5:3,6:4,10:5,4:9,1:[2,3],11:$V2,13:$V3,15:$V4}),{7:10,8:[1,11],9:[1,12]},o($V0,$V1,{10:5,6:13,11:$V2,13:$V3,15:$V4}),{12:[1,14]},{14:[1,15]},o($V5,[2,11]),{1:[2,2]},o($V6,[2,4]),o($V6,[2,5]),o($V6,[2,6]),o($V0,[2,7]),o($V5,[2,9]),o($V5,[2,10])],
+defaultActions: {2:[2,1],9:[2,2]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -620,38 +596,24 @@ options: {},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0: return 16; 
+case 0: this.begin('nameprefix'); return 13; 
 break;
-case 1: return 15; 
+case 1: this.begin('comment'); return 11; 
 break;
-case 2: return 15; 
+case 2: this.popState(); return 12; 
 break;
-case 3: this.begin('nameprefix'); return 10; 
+case 3:  this.popState(); return 14; 
 break;
-case 4: this.begin('comment'); return 8; 
+case 4: return 9; 
 break;
-case 5: this.popState(); return 9; 
+case 5: return 15; 
 break;
-case 6: this.popState(); return 11; 
-break;
-case 7: this.begin('singlequotestring'); return 12; 
-break;
-case 8: this.popState(); return 12; 
-break;
-case 9: this.begin('doublequotestring'); return 12; 
-break;
-case 10: this.popState(); return 12; 
-break;
-case 11: return 13; 
-break;
-case 12: return 12; 
-break;
-case 13: return 14; 
+case 6: return 8; 
 break;
 }
 },
-rules: [/^(?:(\s*\{[^\s]+\}\s*;\s*\n*)|(\s*\{[^\s]+\}\s*\n\n\n*))/,/^(?:(\s*[^;\'\"`\s]+\s*;\s*\n*)|(\s*[^;\'\"`\s]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']+')/,/^(?:\s*")/,/^(?:\s*[^\"]+")/,/^(?:\s*\{[^\s]+\})/,/^(?:\s*[^;\'\"`\s]+)/,/^(?:$)/],
-conditions: {"doublequotestring":{"rules":[10],"inclusive":false},"singlequotestring":{"rules":[8],"inclusive":false},"comment":{"rules":[5],"inclusive":false},"nameprefix":{"rules":[6],"inclusive":false},"INITIAL":{"rules":[0,1,2,3,4,7,9,11,12,13],"inclusive":true}}
+rules: [/^(?:--[-\s]*name\s*:\s*)/,/^(?:--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:.*((;\n*)|(\n\n+)))/,/^(?:[^;\n]*\n+)/,/^(?:$)/],
+conditions: {"comment":{"rules":[2],"inclusive":false},"nameprefix":{"rules":[3],"inclusive":false},"INITIAL":{"rules":[0,1,4,5,6],"inclusive":true}}
 });
 return lexer;
 })();
@@ -665,9 +627,9 @@ return new Parser;
 
 
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
-exports.parser = sqlTemplate;
-exports.Parser = sqlTemplate.Parser;
-exports.parse = function () { return sqlTemplate.parse.apply(sqlTemplate, arguments); };
+exports.parser = sqlTemplateBasic;
+exports.Parser = sqlTemplateBasic.Parser;
+exports.parse = function () { return sqlTemplateBasic.parse.apply(sqlTemplateBasic, arguments); };
 exports.main = function commonjsMain(args) {
     if (!args[1]) {
         console.log('Usage: '+args[0]+' FILE');

@@ -71,7 +71,7 @@
     recoverable: (boolean: TRUE when the parser has a error recovery rule available for this particular error)
   }
 */
-var sqlTemplate = (function(){
+var sqlTemplatePg = (function(){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[1,7],$V2=[1,8],$V3=[1,9],$V4=[1,10],$V5=[1,11],$V6=[1,12],$V7=[1,8,10,12,13,14,15,16],$V8=[8,10,12,13,14,15,16];
 var parser = {trace: function trace() {
         Jison.print.apply(null, arguments);
@@ -665,9 +665,9 @@ return new Parser;
 
 
 if (typeof require !== 'undefined' && typeof exports !== 'undefined') {
-exports.parser = sqlTemplate;
-exports.Parser = sqlTemplate.Parser;
-exports.parse = function () { return sqlTemplate.parse.apply(sqlTemplate, arguments); };
+exports.parser = sqlTemplatePg;
+exports.Parser = sqlTemplatePg.Parser;
+exports.parse = function () { return sqlTemplatePg.parse.apply(sqlTemplatePg, arguments); };
 exports.main = function commonjsMain(args) {
     if (!args[1]) {
         console.log('Usage: '+args[0]+' FILE');

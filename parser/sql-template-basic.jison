@@ -1,12 +1,3 @@
-
-/*                       ----- -- name: abcSelect * FROM me;-- name: lllSELECT * FROM you;-- abc-- name: jetSELECT * FROM k WHERE A IN "a -- b" -- comment-- commentWHERE a = b;-- last comment */
-                        /* https://nolanlawson.github.io/jison-debugger/ */
-
-/*  TODO: + fix conflicts,
-          - formatting,
-          - named parameters                     */
-
-
 %lex
 
 %x nameprefix
@@ -14,14 +5,13 @@
 
 %%
 
-"--"[-\s]*"name"\s*":"\s*     { this.begin('nameprefix');
- return 'NAMEPREFIX'; }
-"--"[-\s]*     { this.begin('comment'); return 'COMMENTPREFIX'; }
-<comment>.*\n*        { this.popState(); return 'REST'; }
-<nameprefix>[^\s]+\n+         {  this.popState(); return 'NAME'; }
-.*((";"\n*)|(\n\n+))  { return 'ENDLINE'; }
-[^;\n]*\n+          { return 'LINE'; }
-<<EOF>>        { return 'EOF'; }
+"--"[-\s]*"name"\s*":"\s*     { this.begin('nameprefix'); return 'NAMEPREFIX'; }
+"--"[-\s]*                    { this.begin('comment'); return 'COMMENTPREFIX'; }
+<comment>.*\n*                { this.popState(); return 'REST'; }
+<nameprefix>[^\s]+\n+         { this.popState(); return 'NAME'; }
+.*((";"\n*)|(\n\n+))          { return 'ENDLINE'; }
+[^;\n]*\n+                    { return 'LINE'; }
+<<EOF>>                       { return 'EOF'; }
 
 /lex
 
