@@ -51,7 +51,7 @@ queries
 
 querylines
     : queryline querylines {
-        let params = $2.params;
+        let params = $2.params || {};
         if ($1.param && typeof(params[$1.param]) === 'undefined') {
             params[$1.param] = Object.keys(params).length+1;
         }

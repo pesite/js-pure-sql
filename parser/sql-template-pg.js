@@ -106,7 +106,7 @@ case 3:
 break;
 case 4:
 
-        let params = $$[$0].params;
+        let params = $$[$0].params || {};
         if ($$[$0-1].param && typeof(params[$$[$0-1].param]) === 'undefined') {
             params[$$[$0-1].param] = Object.keys(params).length+1;
         }

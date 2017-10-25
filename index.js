@@ -2,6 +2,4 @@
 
 const pureSql = require('./lib/pure-sql.js');
 
-module.exports = {
-    parseTemplates: pureSql.parseTemplates
-};
+module.exports = pureSql;
