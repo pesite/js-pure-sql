@@ -41,11 +41,11 @@ queries
             r = $2;
         }
         let querylineParams = Object.assign($1.params || {}, $2.params || {});
-        r[$1.name.trim()] = {query: $1.line.trim(), params: querylineParams};
+        r[$1.name.trim()] = {query: $1.line.trim(), params: querylineParams, length: $1.line.trim().length};
         $$ = r; }
     | querylines {
         let rr = {};
-        rr[$1.name.trim()] = {query: $1.line.trim(), params: $1.params};
+        rr[$1.name.trim()] = {query: $1.line.trim(), params: $1.params, length: $1.line.trim().length};
         $$ = rr; }
     ;
 

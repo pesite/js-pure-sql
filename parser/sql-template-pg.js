@@ -95,13 +95,13 @@ case 2:
             r = $$[$0];
         }
         let querylineParams = Object.assign($$[$0-1].params || {}, $$[$0].params || {});
-        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams};
+        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams, length: $$[$0-1].line.trim().length};
         this.$ = r; 
 break;
 case 3:
 
         let rr = {};
-        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params};
+        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params, length: $$[$0].line.trim().length};
         this.$ = rr; 
 break;
 case 4:

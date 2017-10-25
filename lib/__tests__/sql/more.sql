@@ -1,1 +1,1 @@
-SELECT * FROM evenMore;
+SELECT * FROM evenMore WHERE id = {id};
