@@ -7,8 +7,8 @@
 
 %%
 
-(\s*\{[^\s]+\}\s*";"\s*\n*)|(\s*\{[^\s]+\}\s*\n\n\n*)      { return 'ENDPARAM'; }
-(\s*[^;\'\"`\s]+\s*";"\s*\n*)|(\s*[^;\'\"`\s]+\s*\n\n\n*)  { return 'ENDWORD'; }
+(\s*\{[^\s]+\}\s*";"\s*\n*)|(\s*\{[^\s]+\}\s*\n\n\n*)        { return 'ENDPARAM'; }
+(\s*[^;\'\"`\s{]+\s*";"\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*)  { return 'ENDWORD'; }
 (\s*";"\s*\n*)|(\s*\n\n\n*)     { return 'ENDWORD'; }
 \n*"--"[-\s]*"name"\s*":"\s*    { this.begin('nameprefix'); return 'NAMEPREFIX'; }
 \n*"--"[-\s]*                   { this.begin('comment'); return 'COMMENTPREFIX'; }
@@ -21,7 +21,7 @@
 <doublequotestring>\s*[^\"]+'"' { this.popState(); return 'WORD'; }
 
 \s*\{[^\s]+\}                   { return 'PARAM'; }
-\s*[^;\'\"`\s]+                 { return 'WORD'; }
+\s*[^;\'\"`\s{]+                { return 'WORD'; }
 <<EOF>>                         { return 'EOF'; }
 
 /lex
