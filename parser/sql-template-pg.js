@@ -86,7 +86,7 @@ performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* actio
 var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
- return $$[$0]; 
+ return $$[$0];
 break;
 case 2:
 
@@ -95,52 +95,63 @@ case 2:
             r = $$[$0];
         }
         let querylineParams = Object.assign($$[$0-1].params || {}, $$[$0].params || {});
-        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams, length: $$[$0-1].line.trim().length};
-        this.$ = r; 
+        let querylineDynamicParams = Object.assign($$[$0-1].dynamicParams || {}, $$[$0].dynamicParams || {});
+        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams, length: $$[$0-1].line.trim().length, dynamicParams: querylineDynamicParams};
+        this.$ = r;
 break;
 case 3:
 
         let rr = {};
-        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params, length: $$[$0].line.trim().length};
-        this.$ = rr; 
+        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params, length: $$[$0].line.trim().length, dynamicParams: $$[$0].dynamicParams};
+        this.$ = rr;
 break;
 case 4:
 
         let params = $$[$0].params || {};
+        let dynamicParams = $$[$0].dynamicParams || {};
         if ($$[$0-1].param && typeof(params[$$[$0-1].param]) === 'undefined') {
-            params[$$[$0-1].param] = Object.keys(params).length+1;
+            if ($$[$0-1].param[0] !== '!' && $$[$0-1].param.substr(-1) !== '*') {
+                params[$$[$0-1].param] = Object.keys(params).length+1;
+            } else {
+                dynamicParams[$$[$0-1].param] = Object.keys(dynamicParams).length+1;
+            }
         }
         if ($$[$0].param && typeof(params[$$[$0].param]) === 'undefined') {
-            params[$$[$0].param] = Object.keys(params).length+1;
+            if ($$[$0].param[0] !== '!' && $$[$0].param.substr(-1) !== '*') {
+                params[$$[$0].param] = Object.keys(params).length+1;
+            } else {
+                dynamicParams[$$[$0].param] = Object.keys(dynamicParams).length+1;
+            }
         }
-        $$[$0] = $$[$0] || {line: '', name: ''};
+        $$[$0] = $$[$0] || {line: '', name: '', dynamicParams: {}};
         this.$ = {line: $$[$0-1].line + $$[$0].line,
               name: $$[$0-1].name + $$[$0].name,
-              params: params}; 
+              params: params,
+              dynamicParams: dynamicParams };
 break;
 case 5:
- this.$ = $$[$0]; 
+ this.$ = $$[$0];
 break;
 case 6:
- this.$ = {comment: $$[$0], line: ' ', name: ''}; 
+ this.$ = {comment: $$[$0], line: ' ', name: ''};
 break;
 case 7:
- this.$ = {name: $$[$0], line: ''}; 
+ this.$ = {name: $$[$0], line: ''};
 break;
 case 8:
- this.$ = {line: $$[$0] || '', name: ''}; 
+ this.$ = {line: $$[$0] || '', name: ''};
 break;
 case 9:
- this.$ = {line: $$[$0] || '', name: '', param: $$[$0].trim().substring(1, $$[$0].trim().length-1)}; 
+ this.$ = {line: $$[$0] || '', name: '', param: $$[$0].trim().substring(1, $$[$0].trim().length-1)};
 break;
 case 10:
- this.$ = { name: '', line: ''}; 
+ this.$ = { name: '', line: '', dynamicParams: {}};
 break;
 case 11:
- this.$ = {name: '', line: $$[$0]}; 
+ this.$ = {name: '', line: $$[$0], dynamicParams: {}};
 break;
 case 12:
- let trimmed = $$[$0].replace(';', ' ').trim(); this.$ = {line: $$[$0] || '', name: '', param: trimmed.substring(1, trimmed.length-1), params: {}}; 
+ let trimmed = $$[$0].replace(';', ' ').trim(); this.$ = {line: $$[$0] || '', name: '', param: trimmed.substring(1, trimmed.length-1), params: {}, dynamicParams: {}};
 break;
 }
 },
@@ -620,33 +631,33 @@ options: {},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0: return 16; 
+case 0: return 16;
 break;
-case 1: return 15; 
+case 1: return 15;
 break;
-case 2: return 15; 
+case 2: return 15;
 break;
-case 3: this.begin('nameprefix'); return 10; 
+case 3: this.begin('nameprefix'); return 10;
 break;
-case 4: this.begin('comment'); return 8; 
+case 4: this.begin('comment'); return 8;
 break;
-case 5: this.popState(); return 9; 
+case 5: this.popState(); return 9;
 break;
-case 6: this.popState(); return 11; 
+case 6: this.popState(); return 11;
 break;
-case 7: this.begin('singlequotestring'); return 12; 
+case 7: this.begin('singlequotestring'); return 12;
 break;
-case 8: this.popState(); return 12; 
+case 8: this.popState(); return 12;
 break;
-case 9: this.begin('doublequotestring'); return 12; 
+case 9: this.begin('doublequotestring'); return 12;
 break;
-case 10: this.popState(); return 12; 
+case 10: this.popState(); return 12;
 break;
-case 11: return 13; 
+case 11: return 13;
 break;
-case 12: return 12; 
+case 12: return 12;
 break;
-case 13: return 14; 
+case 13: return 14;
 break;
 }
 },

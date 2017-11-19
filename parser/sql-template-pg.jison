@@ -41,27 +41,38 @@ queries
             r = $2;
         }
         let querylineParams = Object.assign($1.params || {}, $2.params || {});
-        r[$1.name.trim()] = {query: $1.line.trim(), params: querylineParams, length: $1.line.trim().length};
+        let querylineDynamicParams = Object.assign($1.dynamicParams || {}, $2.dynamicParams || {});
+        r[$1.name.trim()] = {query: $1.line.trim(), params: querylineParams, length: $1.line.trim().length, dynamicParams: querylineDynamicParams};
         $$ = r; }
     | querylines {
         let rr = {};
-        rr[$1.name.trim()] = {query: $1.line.trim(), params: $1.params, length: $1.line.trim().length};
+        rr[$1.name.trim()] = {query: $1.line.trim(), params: $1.params, length: $1.line.trim().length, dynamicParams: $1.dynamicParams};
         $$ = rr; }
     ;
 
 querylines
     : queryline querylines {
         let params = $2.params || {};
+        let dynamicParams = $2.dynamicParams || {};
         if ($1.param && typeof(params[$1.param]) === 'undefined') {
-            params[$1.param] = Object.keys(params).length+1;
+            if ($1.param[0] !== '!' && $1.param.substr(-1) !== '*') {
+                params[$1.param] = Object.keys(params).length+1;
+            } else {
+                dynamicParams[$1.param] = Object.keys(dynamicParams).length+1;
+            }
         }
         if ($2.param && typeof(params[$2.param]) === 'undefined') {
-            params[$2.param] = Object.keys(params).length+1;
+            if ($2.param[0] !== '!' && $2.param.substr(-1) !== '*') {
+                params[$2.param] = Object.keys(params).length+1;
+            } else {
+                dynamicParams[$2.param] = Object.keys(dynamicParams).length+1;
+            }
         }
-        $2 = $2 || {line: '', name: ''};
+        $2 = $2 || {line: '', name: '', dynamicParams: {}};
         $$ = {line: $1.line + $2.line,
               name: $1.name + $2.name,
-              params: params}; }
+              params: params,
+              dynamicParams: dynamicParams }; }
     | queryend { $$ = $1; }
     ;
 
@@ -73,7 +84,7 @@ queryline
     ;
 
 queryend
-    : EOF { $$ = { name: '', line: ''}; }
-    | ENDWORD { $$ = {name: '', line: $1}; }
-    | ENDPARAM { let trimmed = $1.replace(';', ' ').trim(); $$ = {line: $1 || '', name: '', param: trimmed.substring(1, trimmed.length-1), params: {}}; }
+    : EOF { $$ = { name: '', line: '', dynamicParams: {}}; }
+    | ENDWORD { $$ = {name: '', line: $1, dynamicParams: {}}; }
+    | ENDPARAM { let trimmed = $1.replace(';', ' ').trim(); $$ = {line: $1 || '', name: '', param: trimmed.substring(1, trimmed.length-1), params: {}, dynamicParams: {}}; }
     ;

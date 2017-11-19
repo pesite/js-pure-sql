@@ -90,4 +90,4 @@ client.query(templates.updateUserName.query, templates.updateUserName.map(user),
 
 ## Inspiration
 
-This library is inspired by the clojure library [yesql](https://github.com/krisajenkins/yesql)
+This library is inspired by the clojure library [hugsql](https://github.com/layerware/hugsql)
