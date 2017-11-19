@@ -2,6 +2,10 @@
 
 Write your sql just as sql. Then use it.
 
+> _**Note**:_
+> This is highly similar to a slightly more feature-rich and two weeks older [puresql](https://github.com/neonerd/puresql).
+> That's a mere coincidence. We just seem to have had the same idea and came up with the same name.
+
 ## How to use
 
 Assume you have some sql code as follows:
