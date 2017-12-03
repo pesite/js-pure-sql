@@ -7,9 +7,8 @@
 
 %%
 
-"\s"  { return '\s'; }
-(\s*":""!"?[a-zA-Z0-9-_]+"*"*\s*";"\s*\n*)|(\s*":""!"?[a-zA-Z0-9-_]+"*"*\s*\n\n\n*)      { return 'ENDPARAM'; }
-(\s*[^;\'\"`\s{:]+\s*";"\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*)  { return 'ENDWORD'; }
+(\s*\{[^\s]+\}\s*";"\s*\n*)|(\s*\{[^\s]+\}\s*\n\n\n*)        { return 'ENDPARAM'; }
+(\s*[^;\'\"`\s{]+\s*";"\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*)  { return 'ENDWORD'; }
 (\s*";"\s*\n*)|(\s*\n\n\n*)     { return 'ENDWORD'; }
 \n*"--"[-\s]*"name"\s*":"\s*    { this.begin('nameprefix'); return 'NAMEPREFIX'; }
 \n*"--"[-\s]*                   { this.begin('comment'); return 'COMMENTPREFIX'; }
@@ -21,8 +20,8 @@
 \s*'"'                          { this.begin('doublequotestring'); return 'WORD'; }
 <doublequotestring>\s*[^\"]+'"' { this.popState(); return 'WORD'; }
 
-\s*":""!"?[a-zA-Z0-9-_]+"*"*    { return 'PARAM'; }
-\s*[^;\'\"`\s:]+                { return 'WORD'; }
+\s*\{[^\s]+\}                   { return 'PARAM'; }
+\s*[^;\'\"`\s{]+                { return 'WORD'; }
 <<EOF>>                         { return 'EOF'; }
 
 /lex
@@ -81,11 +80,11 @@ queryline
     : COMMENTPREFIX REST { $$ = {comment: $2, line: ' ', name: ''}; }
     | NAMEPREFIX NAME { $$ = {name: $2, line: ''}; }
     | WORD { $$ = {line: $1 || '', name: ''}; }
-    | PARAM { $$ = {line: $1 || '', name: '', param: $1.trim().substring(1)}; }
+    | PARAM { $$ = {line: $1 || '', name: '', param: $1.trim().substring(1, $1.trim().length-1)}; }
     ;
 
 queryend
     : EOF { $$ = { name: '', line: '', dynamicParams: {}}; }
     | ENDWORD { $$ = {name: '', line: $1, dynamicParams: {}}; }
-    | ENDPARAM { let trimmed = $1.replace(';', ' ').trim(); $$ = {line: $1 || '', name: '', param: trimmed.substring(1), params: {}, dynamicParams: {}}; }
+    | ENDPARAM { let trimmed = $1.replace(';', ' ').trim(); $$ = {line: $1 || '', name: '', param: trimmed.substring(1, trimmed.length-1), params: {}, dynamicParams: {}}; }
     ;
