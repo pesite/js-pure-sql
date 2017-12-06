@@ -633,38 +633,40 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0: return '\s';
 break;
-case 1: return 16;
+case 1: return 12;
 break;
-case 2: return 15;
+case 2: return 16;
 break;
 case 3: return 15;
 break;
-case 4: this.begin('nameprefix'); return 10;
+case 4: return 15;
 break;
-case 5: this.begin('comment'); return 8;
+case 5: this.begin('nameprefix'); return 10;
 break;
-case 6: this.popState(); return 9;
+case 6: this.begin('comment'); return 8;
 break;
-case 7: this.popState(); return 11;
+case 7: this.popState(); return 9;
 break;
-case 8: this.begin('singlequotestring'); return 12;
+case 8: this.popState(); return 11;
 break;
-case 9: this.popState(); return 12;
+case 9: this.begin('singlequotestring'); return 12;
 break;
-case 10: this.begin('doublequotestring'); return 12;
+case 10: this.popState(); return 12;
 break;
-case 11: this.popState(); return 12;
+case 11: this.begin('doublequotestring'); return 12;
 break;
-case 12: return 13;
+case 12: this.popState(); return 12;
 break;
-case 13: return 12;
+case 13: return 13;
 break;
-case 14: return 14;
+case 14: return 12;
+break;
+case 15: return 14;
 break;
 }
 },
-rules: [/^(?:\\s)/,/^(?:(\s*:!?[a-zA-Z0-9-_]+\**\s*;\s*\n*)|(\s*:!?[a-zA-Z0-9-_]+\**\s*\n\n\n*))/,/^(?:(\s*[^;\'\"`\s{:]+\s*;\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']+')/,/^(?:\s*")/,/^(?:\s*[^\"]+")/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*[^;\'\"`\s:]+)/,/^(?:$)/],
-conditions: {"doublequotestring":{"rules":[11],"inclusive":false},"singlequotestring":{"rules":[9],"inclusive":false},"comment":{"rules":[6],"inclusive":false},"nameprefix":{"rules":[7],"inclusive":false},"INITIAL":{"rules":[0,1,2,3,4,5,8,10,12,13,14],"inclusive":true}}
+rules: [/^(?:\\s)/,/^(?:::+)/,/^(?:(\s*:!?[a-zA-Z0-9-_]+\**\s*;\s*\n*)|(\s*:!?[a-zA-Z0-9-_]+\**\s*\n\n\n*))/,/^(?:(\s*[^;\'\"`\s{:]+\s*;\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']+')/,/^(?:\s*")/,/^(?:\s*[^\"]+")/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*[^;\'\"`\s:]+)/,/^(?:$)/],
+conditions: {"doublequotestring":{"rules":[12],"inclusive":false},"singlequotestring":{"rules":[10],"inclusive":false},"comment":{"rules":[7],"inclusive":false},"nameprefix":{"rules":[8],"inclusive":false},"INITIAL":{"rules":[0,1,2,3,4,5,6,9,11,13,14,15],"inclusive":true}}
 });
 return lexer;
 })();

@@ -8,6 +8,7 @@
 %%
 
 "\s"  { return '\s'; }
+':'':'+                         { return 'WORD'; }
 (\s*":""!"?[a-zA-Z0-9-_]+"*"*\s*";"\s*\n*)|(\s*":""!"?[a-zA-Z0-9-_]+"*"*\s*\n\n\n*)      { return 'ENDPARAM'; }
 (\s*[^;\'\"`\s{:]+\s*";"\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*)  { return 'ENDWORD'; }
 (\s*";"\s*\n*)|(\s*\n\n\n*)     { return 'ENDWORD'; }
