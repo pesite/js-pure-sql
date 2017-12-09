@@ -19,6 +19,12 @@ SELECT id, name FROM "user" WHERE id = $1;
 -- name: updateUserName
 UPDATE "user" SET name = $2 WHERE id = $1
 RETURNING id, name;
+
+-- name: findUsers
+SELECT id, name FROM "user" WHERE id IN (:id*);
+
+-- name: insertUsers
+INSERT INTO :!table VALUES :userData**;
 ```
 
 And you want to run that in your application.
@@ -26,7 +32,7 @@ And you want to run that in your application.
 `./someApp.js`
 ```js
 // purely illustrative example that does not run without db config
-const pureSql = require('pure-sql');
+const pureSql = require('pure-sql').PG;
 const path = require('path');
 
 // Load templates.
@@ -47,6 +53,19 @@ client.query(templates.updateUserName, [user.id, user.name], (err, res) => {
 });
 
 console.log(templates) // {getUser: 'SELECT id, name FROM "user" WHERE id = $1;', updateUserName: 'UPDATE "user" SET name = $2 WHERE id = $1\nRETURNING id, name;'}
+
+console.log(templates.updateUserName.mapTemplate(user)); /* Output:
+{
+	query: 'SELECT id, name FROM "user" WHERE id = $1;', updateUserName: 'UPDATE "user" SET name = $2 WHERE id = $1\nRETURNING id, name;',
+	args: ['testUserId', 'testName']}
+*/
+
+console.log(templates.insertUsers.mapTemplate({'!table': '"users"', 'userData**': [['u1', 'name1'], ['u2', 'name2']]}));
+/* Output:
+{
+	query: 'INSERT INTO "user" VALUES ($1,$2),($3,$4)',
+	args: ['u1', 'name1', 'u2', 'name2']}
+*/
 ```
 
 ## What's so spectacular about that?
@@ -59,20 +78,20 @@ For example, however, if you really want a bit more and you happen to use someth
 `./sql/user.sql`
 ```sql
 -- name: getUser
-SELECT id, name FROM "user" WHERE id = {id};
+SELECT id, name FROM "user" WHERE id = :id;
 
 -- name: updateUserName
-UPDATE "user" SET name = {name} WHERE id = {id}
+UPDATE "user" SET name = :name WHERE id = id
 RETURNING id, name;
 ```
 `./someApp.js`
 ```js
 // purely illustrative example that does not run without db config
-const pureSql = require('pure-sql');
+const pureSql = require('pure-sql').PG;
 const path = require('path');
 
 // Load templates.
-const templates = pureSql.PG.parseTemplateFiles(path.resolve(__dirname, './sql'), '.sql');
+const templates = pureSql.parseTemplateFiles(path.resolve(__dirname, './sql'), '.sql');
 
 // Create some postgresql client for testing.
 const Client = require('pg').Client;
@@ -88,6 +107,23 @@ client.query(templates.updateUserName.query, templates.updateUserName.map(user),
   client.end()
 });
 ```
+
+### If you happen to need to change the parameter replacement
+```js
+const mysqlParamFunc = function(idx, name) {
+		// Just in case, you can either have the index of the parameter and its name
+        return '?';
+}
+const templates = pureSql.withParam(mysqlParamFunc).withRepeatingArgs().parseTemplateFiles(path.resolve(__dirname, './sql'), '.sql');
+
+// Then, as above
+console.log(templates.updateUserName.mapTemplate(user)); /* Output:
+{
+    query: 'SELECT id, name FROM "user" WHERE id = ?;', updateUserName: 'UPDATE "user" SET name = ? WHERE id = ?\nRETURNING id, name;',
+    args: ['testUserId', 'testName', 'testUserId']}
+*/
+```
+
 
 ## For installation
 

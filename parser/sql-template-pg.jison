@@ -56,25 +56,35 @@ querylines
     : queryline querylines {
         let params = $2.params || {};
         let dynamicParams = $2.dynamicParams || {};
-        if ($1.param && typeof(params[$1.param]) === 'undefined') {
+        let paramCount = ($2.paramCount || 0) + ($1.paramCount || 0);
+        if ($1.param) {
             if ($1.param[0] !== '!' && $1.param.substr(-1) !== '*') {
-                params[$1.param] = Object.keys(params).length+1;
+                if (typeof(params[$1.param]) === 'undefined') {
+                    params[$1.param] = [];
+                }
+                params[$1.param].push(paramCount);
+                $1.paramCount += 1; paramCount += 1;
             } else {
                 dynamicParams[$1.param] = Object.keys(dynamicParams).length+1;
             }
         }
         if ($2.param && typeof(params[$2.param]) === 'undefined') {
             if ($2.param[0] !== '!' && $2.param.substr(-1) !== '*') {
-                params[$2.param] = Object.keys(params).length+1;
+                if (typeof(params[$2.param]) === 'undefined') {
+                    params[$2.param] = [];
+                }
+                params[$2.param].push(paramCount);
+                $2.paramCount += 1; paramCount += 1;
             } else {
                 dynamicParams[$2.param] = Object.keys(dynamicParams).length+1;
             }
         }
-        $2 = $2 || {line: '', name: '', dynamicParams: {}};
+        $2 = $2 || {line: '', name: '', dynamicParams: {}, paramCount: 0};
         $$ = {line: $1.line + $2.line,
               name: $1.name + $2.name,
               params: params,
-              dynamicParams: dynamicParams }; }
+              dynamicParams: dynamicParams,
+              paramCount: paramCount }; }
     | queryend { $$ = $1; }
     ;
 
