@@ -60,7 +60,7 @@ console.log(templates.updateUserName.mapTemplate(user)); /* Output:
 	args: ['testUserId', 'testName']}
 */
 
-console.log(templates.insertUsers.mapTemplate({'!table': '"users"', 'userData**': [['u1', 'name1'], ['u2', 'name2']]}));
+console.log(templates.insertUsers.mapTemplate({'!table': '"user"', 'userData**': [['u1', 'name1'], ['u2', 'name2']]}));
 /* Output:
 {
 	query: 'INSERT INTO "user" VALUES ($1,$2),($3,$4)',
@@ -81,7 +81,7 @@ For example, however, if you really want a bit more and you happen to use someth
 SELECT id, name FROM "user" WHERE id = :id;
 
 -- name: updateUserName
-UPDATE "user" SET name = :name WHERE id = id
+UPDATE "user" SET name = :name WHERE id = :id
 RETURNING id, name;
 ```
 `./someApp.js`
