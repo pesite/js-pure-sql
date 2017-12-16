@@ -57,17 +57,7 @@ querylines
         let params = $2.params || {};
         let dynamicParams = $2.dynamicParams || {};
         let paramCount = ($2.paramCount || 0) + ($1.paramCount || 0);
-        if ($1.param) {
-            if ($1.param[0] !== '!' && $1.param.substr(-1) !== '*') {
-                if (typeof(params[$1.param]) === 'undefined') {
-                    params[$1.param] = [];
-                }
-                params[$1.param].push(paramCount);
-                $1.paramCount += 1; paramCount += 1;
-            } else {
-                dynamicParams[$1.param] = Object.keys(dynamicParams).length+1;
-            }
-        }
+        let dynamicParamCount = ($2.dynamicParamCount || 0) + ($1.dynamicParamCount || 0);
         if ($2.param && typeof(params[$2.param]) === 'undefined') {
             if ($2.param[0] !== '!' && $2.param.substr(-1) !== '*') {
                 if (typeof(params[$2.param]) === 'undefined') {
@@ -76,15 +66,35 @@ querylines
                 params[$2.param].push(paramCount);
                 $2.paramCount += 1; paramCount += 1;
             } else {
-                dynamicParams[$2.param] = Object.keys(dynamicParams).length+1;
+                if (typeof(dynamicParams[$2.param]) === 'undefined') {
+                    dynamicParams[$2.param] = [];
+                }
+                dynamicParams[$2.param].push(dynamicParamCount);
+                $2.dynamicParamCount += 1; dynamicParamCount += 1;
             }
         }
-        $2 = $2 || {line: '', name: '', dynamicParams: {}, paramCount: 0};
+        if ($1.param) {
+            if ($1.param[0] !== '!' && $1.param.substr(-1) !== '*') {
+                if (typeof(params[$1.param]) === 'undefined') {
+                    params[$1.param] = [];
+                }
+                params[$1.param].push(paramCount);
+                $1.paramCount += 1; paramCount += 1;
+            } else {
+                if (typeof(dynamicParams[$1.param]) === 'undefined') {
+                    dynamicParams[$1.param] = [];
+                }
+                dynamicParams[$1.param].push(dynamicParamCount);
+                $1.dynamicParamCount += 1; dynamicParamCount += 1;
+            }
+        }
+        $2 = $2 || {line: '', name: '', dynamicParams: {}, paramCount: 0, dynamicParamCount: 0};
         $$ = {line: $1.line + $2.line,
               name: $1.name + $2.name,
               params: params,
               dynamicParams: dynamicParams,
-              paramCount: paramCount }; }
+              paramCount: paramCount,
+              dynamicParamCount: dynamicParamCount}; }
     | queryend { $$ = $1; }
     ;
 

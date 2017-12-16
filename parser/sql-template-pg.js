@@ -110,17 +110,7 @@ case 4:
         let params = $$[$0].params || {};
         let dynamicParams = $$[$0].dynamicParams || {};
         let paramCount = ($$[$0].paramCount || 0) + ($$[$0-1].paramCount || 0);
-        if ($$[$0-1].param) {
-            if ($$[$0-1].param[0] !== '!' && $$[$0-1].param.substr(-1) !== '*') {
-                if (typeof(params[$$[$0-1].param]) === 'undefined') {
-                    params[$$[$0-1].param] = [];
-                }
-                params[$$[$0-1].param].push(paramCount);
-                $$[$0-1].paramCount += 1; paramCount += 1;
-            } else {
-                dynamicParams[$$[$0-1].param] = Object.keys(dynamicParams).length+1;
-            }
-        }
+        let dynamicParamCount = ($$[$0].dynamicParamCount || 0) + ($$[$0-1].dynamicParamCount || 0);
         if ($$[$0].param && typeof(params[$$[$0].param]) === 'undefined') {
             if ($$[$0].param[0] !== '!' && $$[$0].param.substr(-1) !== '*') {
                 if (typeof(params[$$[$0].param]) === 'undefined') {
@@ -129,15 +119,35 @@ case 4:
                 params[$$[$0].param].push(paramCount);
                 $$[$0].paramCount += 1; paramCount += 1;
             } else {
-                dynamicParams[$$[$0].param] = Object.keys(dynamicParams).length+1;
+                if (typeof(dynamicParams[$$[$0].param]) === 'undefined') {
+                    dynamicParams[$$[$0].param] = [];
+                }
+                dynamicParams[$$[$0].param].push(dynamicParamCount);
+                $$[$0].dynamicParamCount += 1; dynamicParamCount += 1;
             }
         }
-        $$[$0] = $$[$0] || {line: '', name: '', dynamicParams: {}, paramCount: 0};
+        if ($$[$0-1].param) {
+            if ($$[$0-1].param[0] !== '!' && $$[$0-1].param.substr(-1) !== '*') {
+                if (typeof(params[$$[$0-1].param]) === 'undefined') {
+                    params[$$[$0-1].param] = [];
+                }
+                params[$$[$0-1].param].push(paramCount);
+                $$[$0-1].paramCount += 1; paramCount += 1;
+            } else {
+                if (typeof(dynamicParams[$$[$0-1].param]) === 'undefined') {
+                    dynamicParams[$$[$0-1].param] = [];
+                }
+                dynamicParams[$$[$0-1].param].push(dynamicParamCount);
+                $$[$0-1].dynamicParamCount += 1; dynamicParamCount += 1;
+            }
+        }
+        $$[$0] = $$[$0] || {line: '', name: '', dynamicParams: {}, paramCount: 0, dynamicParamCount: 0};
         this.$ = {line: $$[$0-1].line + $$[$0].line,
               name: $$[$0-1].name + $$[$0].name,
               params: params,
               dynamicParams: dynamicParams,
-              paramCount: paramCount };
+              paramCount: paramCount,
+              dynamicParamCount: dynamicParamCount};
 break;
 case 5:
  this.$ = $$[$0];
