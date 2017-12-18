@@ -64,13 +64,13 @@ querylines
                     params[$2.param] = [];
                 }
                 params[$2.param].push(paramCount);
-                $2.paramCount += 1; paramCount += 1;
+                $2.paramCount -= 1; paramCount -= 1;
             } else {
                 if (typeof(dynamicParams[$2.param]) === 'undefined') {
                     dynamicParams[$2.param] = [];
                 }
                 dynamicParams[$2.param].push(dynamicParamCount);
-                $2.dynamicParamCount += 1; dynamicParamCount += 1;
+                $2.dynamicParamCount -= 1; dynamicParamCount -= 1;
             }
         }
         if ($1.param) {
@@ -79,13 +79,13 @@ querylines
                     params[$1.param] = [];
                 }
                 params[$1.param].push(paramCount);
-                $1.paramCount += 1; paramCount += 1;
+                $1.paramCount -= 1; paramCount -= 1;
             } else {
                 if (typeof(dynamicParams[$1.param]) === 'undefined') {
                     dynamicParams[$1.param] = [];
                 }
                 dynamicParams[$1.param].push(dynamicParamCount);
-                $1.dynamicParamCount += 1; dynamicParamCount += 1;
+                $1.dynamicParamCount -= 1; dynamicParamCount -= 1;
             }
         }
         $2 = $2 || {line: '', name: '', dynamicParams: {}, paramCount: 0, dynamicParamCount: 0};

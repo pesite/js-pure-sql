@@ -117,13 +117,13 @@ case 4:
                     params[$$[$0].param] = [];
                 }
                 params[$$[$0].param].push(paramCount);
-                $$[$0].paramCount += 1; paramCount += 1;
+                $$[$0].paramCount -= 1; paramCount -= 1;
             } else {
                 if (typeof(dynamicParams[$$[$0].param]) === 'undefined') {
                     dynamicParams[$$[$0].param] = [];
                 }
                 dynamicParams[$$[$0].param].push(dynamicParamCount);
-                $$[$0].dynamicParamCount += 1; dynamicParamCount += 1;
+                $$[$0].dynamicParamCount -= 1; dynamicParamCount -= 1;
             }
         }
         if ($$[$0-1].param) {
@@ -132,13 +132,13 @@ case 4:
                     params[$$[$0-1].param] = [];
                 }
                 params[$$[$0-1].param].push(paramCount);
-                $$[$0-1].paramCount += 1; paramCount += 1;
+                $$[$0-1].paramCount -= 1; paramCount -= 1;
             } else {
                 if (typeof(dynamicParams[$$[$0-1].param]) === 'undefined') {
                     dynamicParams[$$[$0-1].param] = [];
                 }
                 dynamicParams[$$[$0-1].param].push(dynamicParamCount);
-                $$[$0-1].dynamicParamCount += 1; dynamicParamCount += 1;
+                $$[$0-1].dynamicParamCount -= 1; dynamicParamCount -= 1;
             }
         }
         $$[$0] = $$[$0] || {line: '', name: '', dynamicParams: {}, paramCount: 0, dynamicParamCount: 0};
