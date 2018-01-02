@@ -18,9 +18,9 @@
 <nameprefix>[^\s]+\n+           { this.popState(); return 'NAME'; }
 
 \s*"'"                          { this.begin('singlequotestring'); return 'WORD'; }
-<singlequotestring>[^\']+"'"    { this.popState(); return 'WORD'; }
+<singlequotestring>[^\']*"'"    { this.popState(); return 'WORD'; }
 \s*'"'                          { this.begin('doublequotestring'); return 'WORD'; }
-<doublequotestring>\s*[^\"]+'"' { this.popState(); return 'WORD'; }
+<doublequotestring>\s*[^\"]*'"' { this.popState(); return 'WORD'; }
 
 \s*":""!"?[a-zA-Z0-9-_]+"*"*    { return 'PARAM'; }
 \s*[^;\'\"`\s:]+                { return 'WORD'; }
