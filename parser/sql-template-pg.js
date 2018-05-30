@@ -72,14 +72,14 @@
   }
 */
 var sqlTemplatePg = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,6],$V1=[1,7],$V2=[1,8],$V3=[1,9],$V4=[1,10],$V5=[1,11],$V6=[1,12],$V7=[1,8,10,12,13,14,15,16],$V8=[8,10,12,13,14,15,16];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,10],$V1=[1,14],$V2=[1,6],$V3=[1,7],$V4=[1,9],$V5=[1,11],$V6=[1,12],$V7=[1,13],$V8=[1,9,12,13,15,17,18,19,20],$V9=[9,12,13,15,17,18,19,20],$Va=[1,20],$Vb=[1,21];
 var parser = {trace: function trace() {
         Jison.print.apply(null, arguments);
     },
 yy: {},
-symbols_: {"error":2,"root":3,"queries":4,"querylines":5,"queryline":6,"queryend":7,"COMMENTPREFIX":8,"REST":9,"NAMEPREFIX":10,"NAME":11,"WORD":12,"PARAM":13,"EOF":14,"ENDWORD":15,"ENDPARAM":16,"$accept":0,"$end":1},
-terminals_: {2:"error",8:"COMMENTPREFIX",9:"REST",10:"NAMEPREFIX",11:"NAME",12:"WORD",13:"PARAM",14:"EOF",15:"ENDWORD",16:"ENDPARAM"},
-productions_: [0,[3,1],[4,2],[4,1],[5,2],[5,1],[6,2],[6,2],[6,1],[6,1],[7,1],[7,1],[7,1]],
+symbols_: {"error":2,"root":3,"queries":4,"querylines":5,"queryline":6,"queryend":7,"generator_params":8,"PARAM":9,"GENENDPARAM":10,"generator":11,"GENERATOR_NAME":12,"COMMENTPREFIX":13,"REST":14,"NAMEPREFIX":15,"NAME":16,"WORD":17,"EOF":18,"ENDWORD":19,"ENDPARAM":20,"$accept":0,"$end":1},
+terminals_: {2:"error",9:"PARAM",10:"GENENDPARAM",12:"GENERATOR_NAME",13:"COMMENTPREFIX",14:"REST",15:"NAMEPREFIX",16:"NAME",17:"WORD",18:"EOF",19:"ENDWORD",20:"ENDPARAM"},
+productions_: [0,[3,1],[4,2],[4,1],[5,2],[5,1],[8,2],[8,1],[11,2],[6,2],[6,2],[6,1],[6,1],[6,1],[7,1],[7,1],[7,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -96,13 +96,14 @@ case 2:
         }
         let querylineParams = Object.assign($$[$0-1].params || {}, $$[$0].params || {});
         let querylineDynamicParams = Object.assign($$[$0-1].dynamicParams || {}, $$[$0].dynamicParams || {});
-        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams, length: $$[$0-1].line.trim().length, dynamicParams: querylineDynamicParams};
+        let querylineGenerators = Object.assign($$[$0-1].generators || {}, $$[$0].generators || {});
+        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams, length: $$[$0-1].line.trim().length, dynamicParams: querylineDynamicParams, generators: querylineGenerators};
         this.$ = r;
 break;
 case 3:
 
         let rr = {};
-        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params, length: $$[$0].line.trim().length, dynamicParams: $$[$0].dynamicParams};
+        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params, length: $$[$0].line.trim().length, dynamicParams: $$[$0].dynamicParams, generators: $$[$0].generators};
         this.$ = rr;
 break;
 case 4:
@@ -111,6 +112,8 @@ case 4:
         let dynamicParams = $$[$0].dynamicParams || {};
         let paramCount = ($$[$0].paramCount || 0) + ($$[$0-1].paramCount || 0);
         let dynamicParamCount = ($$[$0].dynamicParamCount || 0) + ($$[$0-1].dynamicParamCount || 0);
+        let queryName = $$[$0-1].name + $$[$0].name;
+        let generators = $$[$0].generators || {};
         if ($$[$0].param && typeof(params[$$[$0].param]) === 'undefined') {
             if ($$[$0].param[0] !== '!' && $$[$0].param.substr(-1) !== '*') {
                 if (typeof(params[$$[$0].param]) === 'undefined') {
@@ -141,42 +144,56 @@ case 4:
                 $$[$0-1].dynamicParamCount -= 1; dynamicParamCount -= 1;
             }
         }
+        if ($$[$0-1].isGenerator) {
+            generators[$$[$0-1].name] = {params: $$[$0-1].params};
+            queryName = $$[$0].name;
+        }
         $$[$0] = $$[$0] || {line: '', name: '', dynamicParams: {}, paramCount: 0, dynamicParamCount: 0};
         this.$ = {line: $$[$0-1].line + $$[$0].line,
-              name: $$[$0-1].name + $$[$0].name,
+              name: queryName,
               params: params,
               dynamicParams: dynamicParams,
               paramCount: paramCount,
-              dynamicParamCount: dynamicParamCount};
+              dynamicParamCount: dynamicParamCount,
+              generators: generators};
 break;
-case 5:
+case 5: case 11:
  this.$ = $$[$0];
 break;
 case 6:
- this.$ = {comment: $$[$0], line: ' ', name: ''};
+ this.$ = {line: $$[$0].line || '', name: '', params: [$$[$0-1].trim().substring(1)].concat($$[$0].params)};
 break;
 case 7:
- this.$ = {name: $$[$0], line: ''};
+ let trimmed2 = $$[$0].trim().replace(';', '').replace(/\*$/, '').trim(); this.$ = {line: $$[$0].replace(/[^;]*/g, '') || ' ', params: [trimmed2.substring(1)], dynamicParams: {}};
 break;
 case 8:
- this.$ = {line: $$[$0] || '', name: ''};
+ this.$ = {line: $$[$0-1] + $$[$0].line, name: $$[$0-1].trim().substr(1), isGenerator: true, params: $$[$0].params};
 break;
 case 9:
- this.$ = {line: $$[$0] || '', name: '', param: $$[$0].trim().substring(1)};
+ this.$ = {comment: $$[$0], line: ' ', name: ''};
 break;
 case 10:
- this.$ = { name: '', line: '', dynamicParams: {}};
-break;
-case 11:
- this.$ = {name: '', line: $$[$0], dynamicParams: {}};
+ this.$ = {name: $$[$0], line: ''};
 break;
 case 12:
+ this.$ = {line: $$[$0] || '', name: ''};
+break;
+case 13:
+ this.$ = {line: $$[$0] || '', name: '', param: $$[$0].trim().substring(1)};
+break;
+case 14:
+ this.$ = { name: '', line: '', dynamicParams: {}};
+break;
+case 15:
+ this.$ = {name: '', line: $$[$0], dynamicParams: {}};
+break;
+case 16:
  let trimmed = $$[$0].replace(';', ' ').trim(); this.$ = {line: $$[$0] || '', name: '', param: trimmed.substring(1), params: {}, dynamicParams: {}};
 break;
 }
 },
-table: [{3:1,4:2,5:3,6:4,7:5,8:$V0,10:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{1:[3]},{1:[2,1]},{1:[2,3],4:13,5:3,6:4,7:5,8:$V0,10:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},{5:14,6:4,7:5,8:$V0,10:$V1,12:$V2,13:$V3,14:$V4,15:$V5,16:$V6},o($V7,[2,5]),{9:[1,15]},{11:[1,16]},o($V8,[2,8]),o($V8,[2,9]),o($V7,[2,10]),o($V7,[2,11]),o($V7,[2,12]),{1:[2,2]},o($V7,[2,4]),o($V8,[2,6]),o($V8,[2,7])],
-defaultActions: {2:[2,1],13:[2,2]},
+table: [{3:1,4:2,5:3,6:4,7:5,9:$V0,11:8,12:$V1,13:$V2,15:$V3,17:$V4,18:$V5,19:$V6,20:$V7},{1:[3]},{1:[2,1]},{1:[2,3],4:15,5:3,6:4,7:5,9:$V0,11:8,12:$V1,13:$V2,15:$V3,17:$V4,18:$V5,19:$V6,20:$V7},{5:16,6:4,7:5,9:$V0,11:8,12:$V1,13:$V2,15:$V3,17:$V4,18:$V5,19:$V6,20:$V7},o($V8,[2,5]),{14:[1,17]},{16:[1,18]},o($V9,[2,11]),o($V9,[2,12]),o($V9,[2,13]),o($V8,[2,14]),o($V8,[2,15]),o($V8,[2,16]),{8:19,9:$Va,10:$Vb},{1:[2,2]},o($V8,[2,4]),o($V9,[2,9]),o($V9,[2,10]),o($V9,[2,8]),{8:22,9:$Va,10:$Vb},o($V9,[2,7]),o($V9,[2,6])],
+defaultActions: {2:[2,1],15:[2,2]},
 parseError: function parseError(str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -653,40 +670,46 @@ var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
 case 0: return '\s';
 break;
-case 1: return 12;
+case 1: return 17;
 break;
-case 2: return 16;
+case 2: this.popState(); return 10;
 break;
-case 3: return 15;
+case 3: return 20;
 break;
-case 4: return 15;
+case 4: return 19;
 break;
-case 5: this.begin('nameprefix'); return 10;
+case 5: return 19;
 break;
-case 6: this.begin('comment'); return 8;
+case 6: this.begin('nameprefix'); return 15;
 break;
-case 7: this.popState(); return 9;
+case 7: this.begin('comment'); return 13;
 break;
-case 8: this.popState(); return 11;
+case 8: this.popState(); return 14;
 break;
-case 9: this.begin('singlequotestring'); return 12;
+case 9: this.popState(); return 16;
 break;
-case 10: this.popState(); return 12;
+case 10: this.begin('singlequotestring'); return 17;
 break;
-case 11: this.begin('doublequotestring'); return 12;
+case 11: this.popState(); return 17;
 break;
-case 12: this.popState(); return 12;
+case 12: this.begin('doublequotestring'); return 17;
 break;
-case 13: return 13;
+case 13: this.popState(); return 17;
 break;
-case 14: return 12;
+case 14: return 9;
 break;
-case 15: return 14;
+case 15: this.begin('ingenerator'); return 12;
+break;
+case 16: return 9;
+break;
+case 17: return 17;
+break;
+case 18: return 18;
 break;
 }
 },
-rules: [/^(?:\\s)/,/^(?:::+)/,/^(?:(\s*:!?[a-zA-Z0-9-_]+\**\s*;\s*\n*)|(\s*:!?[a-zA-Z0-9-_]+\**\s*\n\n\n*))/,/^(?:(\s*[^;\'\"`\s{:]+\s*;\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']*')/,/^(?:\s*")/,/^(?:\s*[^\"]*")/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*[^;\'\"`\s:]+)/,/^(?:$)/],
-conditions: {"doublequotestring":{"rules":[12],"inclusive":false},"singlequotestring":{"rules":[10],"inclusive":false},"comment":{"rules":[7],"inclusive":false},"nameprefix":{"rules":[8],"inclusive":false},"INITIAL":{"rules":[0,1,2,3,4,5,6,9,11,13,14,15],"inclusive":true}}
+rules: [/^(?:\\s)/,/^(?:::+)/,/^(?:(\s*:[a-zA-Z0-9-_]+\*+\s*;?\s*\n*)|(\s*:[a-zA-Z0-9-_]+\*+\s*\n\n\n*))/,/^(?:(\s*:!?[a-zA-Z0-9-_]+\**\s*;\s*\n*)|(\s*:!?[a-zA-Z0-9-_]+\**\s*\n\n\n*))/,/^(?:(\s*[^;\'\"`\s{:]+\s*;\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']*')/,/^(?:\s*")/,/^(?:\s*[^\"]*")/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*:\*[a-zA-Z0-9-_]+)/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*[^;\'\"`\s:]+)/,/^(?:$)/],
+conditions: {"ingenerator":{"rules":[2,14],"inclusive":false},"doublequotestring":{"rules":[13],"inclusive":false},"singlequotestring":{"rules":[11],"inclusive":false},"comment":{"rules":[8],"inclusive":false},"nameprefix":{"rules":[9],"inclusive":false},"INITIAL":{"rules":[0,1,3,4,5,6,7,10,12,15,16,17,18],"inclusive":true}}
 });
 return lexer;
 })();
