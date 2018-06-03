@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "node ./node_modules/jest/bin/jest",
+        "compile-parser": "jison -t ./parser/sql-template-pg.jison -o ./parser/sql-template-pg.js",
         "coverage": "node ./node_modules/jest/bin/jest --coverage"
     },
     "keywords": [

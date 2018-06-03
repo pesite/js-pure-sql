@@ -90,105 +90,67 @@ case 1:
 break;
 case 2:
 
-        let r = {};
-        if ($$[$0] !== undefined) {
-            r = $$[$0];
-        }
-        let querylineParams = Object.assign($$[$0-1].params || {}, $$[$0].params || {});
-        let querylineDynamicParams = Object.assign($$[$0-1].dynamicParams || {}, $$[$0].dynamicParams || {});
-        let querylineGenerators = Object.assign($$[$0-1].generators || {}, $$[$0].generators || {});
-        r[$$[$0-1].name.trim()] = {query: $$[$0-1].line.trim(), params: querylineParams, length: $$[$0-1].line.trim().length, dynamicParams: querylineDynamicParams, generators: querylineGenerators};
-        this.$ = r;
+        this.$ = $$[$0-1].concat($$[$0]);
 break;
 case 3:
 
-        let rr = {};
-        rr[$$[$0].name.trim()] = {query: $$[$0].line.trim(), params: $$[$0].params, length: $$[$0].line.trim().length, dynamicParams: $$[$0].dynamicParams, generators: $$[$0].generators};
-        this.$ = rr;
+        this.$ = $$[$0];
 break;
 case 4:
 
-        let params = $$[$0].params || {};
-        let dynamicParams = $$[$0].dynamicParams || {};
-        let paramCount = ($$[$0].paramCount || 0) + ($$[$0-1].paramCount || 0);
-        let dynamicParamCount = ($$[$0].dynamicParamCount || 0) + ($$[$0-1].dynamicParamCount || 0);
-        let queryName = $$[$0-1].name + $$[$0].name;
-        let generators = $$[$0].generators || {};
-        if ($$[$0].param && typeof(params[$$[$0].param]) === 'undefined') {
-            if ($$[$0].param[0] !== '!' && $$[$0].param.substr(-1) !== '*') {
-                if (typeof(params[$$[$0].param]) === 'undefined') {
-                    params[$$[$0].param] = [];
-                }
-                params[$$[$0].param].push(paramCount);
-                $$[$0].paramCount -= 1; paramCount -= 1;
-            } else {
-                if (typeof(dynamicParams[$$[$0].param]) === 'undefined') {
-                    dynamicParams[$$[$0].param] = [];
-                }
-                dynamicParams[$$[$0].param].push(dynamicParamCount);
-                $$[$0].dynamicParamCount -= 1; dynamicParamCount -= 1;
-            }
+        if ($$[$0-1].type === 'text' && $$[$0][0] && $$[$0][0][0] === 'text') {
+           $$[$0][0][1] = $$[$0-1].value + $$[$0][0][1];
+           this.$ = $$[$0];
+        } else if ($$[$0-1].type === 'text' && $$[$0-1].value === '') {
+           this.$ = $$[$0];
+        } else if ($$[$0-1].type === 'comment') {
+           this.$ = $$[$0];
+        } else {
+           this.$ = [[$$[$0-1].type, $$[$0-1].value]].concat($$[$0]);
         }
-        if ($$[$0-1].param) {
-            if ($$[$0-1].param[0] !== '!' && $$[$0-1].param.substr(-1) !== '*') {
-                if (typeof(params[$$[$0-1].param]) === 'undefined') {
-                    params[$$[$0-1].param] = [];
-                }
-                params[$$[$0-1].param].push(paramCount);
-                $$[$0-1].paramCount -= 1; paramCount -= 1;
-            } else {
-                if (typeof(dynamicParams[$$[$0-1].param]) === 'undefined') {
-                    dynamicParams[$$[$0-1].param] = [];
-                }
-                dynamicParams[$$[$0-1].param].push(dynamicParamCount);
-                $$[$0-1].dynamicParamCount -= 1; dynamicParamCount -= 1;
-            }
-        }
-        if ($$[$0-1].isGenerator) {
-            generators[$$[$0-1].name] = {params: $$[$0-1].params};
-            queryName = $$[$0].name;
-        }
-        $$[$0] = $$[$0] || {line: '', name: '', dynamicParams: {}, paramCount: 0, dynamicParamCount: 0};
-        this.$ = {line: $$[$0-1].line + $$[$0].line,
-              name: queryName,
-              params: params,
-              dynamicParams: dynamicParams,
-              paramCount: paramCount,
-              dynamicParamCount: dynamicParamCount,
-              generators: generators};
+
 break;
-case 5: case 11:
- this.$ = $$[$0];
+case 5:
+
+        if ($$[$0].type !== 'text' || $$[$0].value !== '') {
+           this.$ = [[$$[$0].type, $$[$0].value]];
+        } else {
+           this.$ = []
+        }
+
 break;
 case 6:
  this.$ = {line: $$[$0].line || '', name: '', params: [$$[$0-1].trim().substring(1)].concat($$[$0].params)};
 break;
 case 7:
- let trimmed2 = $$[$0].trim().replace(';', '').replace(/\*$/, '').trim(); this.$ = {line: $$[$0].replace(/[^;]*/g, '') || ' ', params: [trimmed2.substring(1)], dynamicParams: {}};
+ let trimmed2 = $$[$0].trim().replace(';', '').replace(/\*$/, '').trim(); this.$ = {line: $$[$0].replace(/[^;]*/g, '') || ' ', params: [trimmed2.substring(1)]};
 break;
 case 8:
- this.$ = {line: $$[$0-1] + $$[$0].line, name: $$[$0-1].trim().substr(1), isGenerator: true, params: $$[$0].params};
+ this.$ = {type: 'generator', value: {name: $$[$0-1].trim().substr(1), params: $$[$0].params}};
 break;
 case 9:
- this.$ = {comment: $$[$0], line: ' ', name: ''};
+ this.$ = {type: 'comment'};
 break;
 case 10:
- this.$ = {name: $$[$0], line: ''};
+ this.$ = {value: $$[$0].trimRight(), type: 'name'};
+break;
+case 11:
+ this.$ = $$[$0];
 break;
 case 12:
- this.$ = {line: $$[$0] || '', name: ''};
+ this.$ = {type: 'text', value: $$[$0]};
 break;
 case 13:
- this.$ = {line: $$[$0] || '', name: '', param: $$[$0].trim().substring(1)};
+ this.$ = {type: 'param', value: $$[$0].trim().substring(1)};
 break;
 case 14:
- this.$ = { name: '', line: '', dynamicParams: {}};
+ this.$ = { value: '', type: 'text'};
 break;
 case 15:
- this.$ = {name: '', line: $$[$0], dynamicParams: {}};
+ this.$ = {type: 'text', value: $$[$0].trimRight()};
 break;
 case 16:
- let trimmed = $$[$0].replace(';', ' ').trim(); this.$ = {line: $$[$0] || '', name: '', param: trimmed.substring(1), params: {}, dynamicParams: {}};
+ let trimmed = $$[$0].replace(';', ' ').trim(); this.$ = {type: 'param', value: trimmed.substring(1)};
 break;
 }
 },
@@ -708,7 +670,7 @@ case 18: return 18;
 break;
 }
 },
-rules: [/^(?:\\s)/,/^(?:::+)/,/^(?:(\s*:[a-zA-Z0-9-_]+\*+\s*;?\s*\n*)|(\s*:[a-zA-Z0-9-_]+\*+\s*\n\n\n*))/,/^(?:(\s*:!?[a-zA-Z0-9-_]+\**\s*;\s*\n*)|(\s*:!?[a-zA-Z0-9-_]+\**\s*\n\n\n*))/,/^(?:(\s*[^;\'\"`\s{:]+\s*;\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']*')/,/^(?:\s*")/,/^(?:\s*[^\"]*")/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*:\*[a-zA-Z0-9-_]+)/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?:\s*[^;\'\"`\s:]+)/,/^(?:$)/],
+rules: [/^(?:\\s)/,/^(?:::+)/,/^(?:(\s*:[a-zA-Z0-9-_]+\*+)|(\s*:[a-zA-Z0-9-_]+\*+\s*\n\n\n*))/,/^(?:(:!?[a-zA-Z0-9-_]+\**))/,/^(?:(\s*[^;\'\"`\s{:]+\s*;\s*\n*)|(\s*[^;\'\"`\s{]+\s*\n\n\n*))/,/^(?:(\s*;\s*\n*)|(\s*\n\n\n*))/,/^(?:\n*--[-\s]*name\s*:\s*)/,/^(?:\n*--[-\s]*)/,/^(?:.*\n*)/,/^(?:[^\s]+\n+)/,/^(?:\s*')/,/^(?:[^\']*')/,/^(?:\s*")/,/^(?:\s*[^\"]*")/,/^(?:\s*:!?[a-zA-Z0-9-_]+\**)/,/^(?::\*[a-zA-Z0-9-_]+)/,/^(?::!?[a-zA-Z0-9-_]+\**)/,/^(?:\n*\s*[^;\'\"`\s:]+\s?|\s+)/,/^(?:$)/],
 conditions: {"ingenerator":{"rules":[2,14],"inclusive":false},"doublequotestring":{"rules":[13],"inclusive":false},"singlequotestring":{"rules":[11],"inclusive":false},"comment":{"rules":[8],"inclusive":false},"nameprefix":{"rules":[9],"inclusive":false},"INITIAL":{"rules":[0,1,3,4,5,6,7,10,12,15,16,17,18],"inclusive":true}}
 });
 return lexer;
